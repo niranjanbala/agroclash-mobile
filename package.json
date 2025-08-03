@@ -6,21 +6,65 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "detox test",
+    "test:e2e:build": "detox build",
+    "test:parity": "jest --testPathPattern=parity"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0",
+    "@types/geojson": "^7946.0.16",
     "expo": "~53.0.20",
+    "expo-location": "~18.1.6",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.5",
-    "react-native-maps": "1.20.1",
-    "expo-location": "~18.1.6"
+    "react-native-maps": "1.20.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react-native": "^12.8.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.0.10",
+    "detox": "^20.28.0",
+    "jest": "^30.0.5",
     "typescript": "~5.8.3"
   },
-  "private": true
+  "private": true,
+  "detox": {
+    "testRunner": {
+      "args": {
+        "config": "e2e/jest.config.js",
+        "maxWorkers": 1
+      },
+      "jest": {
+        "setupFilesAfterEnv": ["<rootDir>/e2e/init.js"]
+      }
+    },
+    "apps": {
+      "android": {
+        "type": "android.apk",
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug"
+      }
+    },
+    "devices": {
+      "simulator": {
+        "type": "android.emulator",
+        "device": {
+          "avdName": "Pixel_3a_API_30_x86"
+        }
+      }
+    },
+    "configurations": {
+      "android": {
+        "device": "simulator",
+        "app": "android"
+      }
+    }
+  }
 }
